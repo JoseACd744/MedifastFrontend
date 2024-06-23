@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 70px;
+        }
+        pre {
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    {% include 'components/toolbar.html' %}
+    <div class="container">
+        <h1 class="text-center">Resultados</h1>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Detalles de la Selección</h5>
+                <p class="card-text"><strong>Almacén Seleccionado:</strong> {{ selected_warehouse }}</p>
+                <p class="card-text"><strong>Hospital Seleccionado:</strong> {{ selected_hospital }}</p>
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Ruta Óptima</h5>
+                <pre class="card-text">{{ ruta }}</pre>
+            </div>
+            <div id="mapid" style="width: 80%; height: 400px; max-width: 800px; margin: 0 auto; margin-top: 20px; margin-bottom: 80px;"></div>        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var mymap = L.map('mapid').setView([-12.1487, -76.0306], 10);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(mymap);
+        var coordenadasRuta = {{ coordenadas_ruta | tojson | safe }};
+        var ruta = L.polyline(coordenadasRuta, {color: 'red'}).addTo(mymap);
+        mymap.fitBounds(ruta.getBounds());
+
+        var coordenadasAlmacenes = {{ coordenadas_almacenes | tojson | safe }};
+        var coordenadasHospitales = {{ coordenadas_hospitales | tojson | safe }};
+        var almacenes = L.layerGroup();
+        var hospitales = L.layerGroup();
+
+
+    </script>
+</body>
+</html>
