@@ -55,11 +55,6 @@
         var ruta = L.polyline(coordenadasRuta, {color: 'red'}).addTo(mymap);
         mymap.fitBounds(ruta.getBounds());
 
-        var coordenadasAlmacenes = {{ coordenadas_almacenes | tojson | safe }};
-        var coordenadasHospitales = {{ coordenadas_hospitales | tojson | safe }};
-        var almacenes = L.layerGroup();
-        var hospitales = L.layerGroup();
-
 
     </script>
 </body>
