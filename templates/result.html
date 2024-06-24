@@ -21,6 +21,9 @@
             white-space: -o-pre-wrap;
             word-wrap: break-word;
         }
+        .modal-content {
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
@@ -30,32 +33,69 @@
         <div class="card mt-4">
             <div class="card-body">
                 <h5 class="card-title">Detalles de la Selección</h5>
-                <p class="card-text"><strong>Almacén Seleccionado:</strong> {{ selected_warehouse }}</p>
-                <p class="card-text"><strong>Hospital Seleccionado:</strong> {{ selected_hospital }}</p>
+                <p class="card-text"><strong>Almacén Seleccionado:</strong> {{ selected_warehouse.name }}</p>
+                <p class="card-text"><strong>Dirección:</strong> {{ selected_warehouse.direccion }}</p>
+                <p class="card-text"><strong>Nombre de la Unidad Organizativa:</strong> {{ selected_warehouse.nombre_uo }}</p><p></p>
+                <p class="card-text"><strong>Hospital Seleccionado:</strong> {{ selected_hospital.name }}</p>
+                <p class="card-text"><strong>Distrito:</strong> {{ selected_hospital.distrito }}</p>
+                <p class="card-text"><strong>Dirección:</strong> {{ selected_hospital.direccion }}</p>
+                <p class="card-text"><strong>Categoria:</strong> {{ selected_hospital.categoria }}</p>
+                <p class="card-text"><strong>Número de contacto:</strong> {{ selected_hospital.telefono }}</p>
             </div>
         </div>
-        <div class="card mt-4">
+        <div class="card mt-4" style="margin-bottom: 20px;">
             <div class="card-body">
                 <h5 class="card-title">Ruta Óptima</h5>
-                <pre class="card-text">{{ ruta }}</pre>
+                <pre class="card-text">{{ ruta_nombre }}</pre>
             </div>
-            <div id="mapid" style="width: 80%; height: 400px; max-width: 800px; margin: 0 auto; margin-top: 20px; margin-bottom: 80px;"></div>        </div>
+            <div id="mapid" style="width: 80%; height: 400px; max-width: 800px; margin: 0 auto; margin-top: 20px; margin-bottom: 20px"></div>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <!-- Modal para detalles del almacén -->
+    <div class="modal fade" id="detalleAlmacenModal" tabindex="-1" role="dialog" aria-labelledby="detalleAlmacenModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleAlmacenModalLabel">Detalles del Almacén</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="detalleAlmacenBody">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalles del hospital -->
+    <div class="modal fade" id="detalleHospitalModal" tabindex="-1" role="dialog" aria-labelledby="detalleHospitalModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleHospitalModalLabel">Detalles del Hospital</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="detalleHospitalBody">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         var mymap = L.map('mapid').setView([-12.1487, -76.0306], 10);
-
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(mymap);
-        var coordenadasRuta = {{ coordenadas_ruta | tojson | safe }};
+        var coordenadasRuta = JSON.parse('{{ coordenadas_ruta | tojson | safe }}');
         var ruta = L.polyline(coordenadasRuta, {color: 'red'}).addTo(mymap);
         mymap.fitBounds(ruta.getBounds());
-
-
     </script>
 </body>
 </html>
